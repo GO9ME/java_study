@@ -1,0 +1,81 @@
+
+JVM이 인식할 수 있는 위치로 드라이버를 가져오기(Application인 경우 - web은 다르게 작업)
+	=> jdbc코드를 실행하기 위해서 JVM이 찾을 수 있는 위치에 있어야한다.
+	1) 작업할 프로젝트를 선택
+	2) 프로젝트 선택 후 단축메뉴에서 [Build Path] - [Configure Build Path] 선택
+	3) Properties 대화상자 세번째 탭인 [Libraries]탭 선택
+	4) [classpath] 선택 후 [Add external JARs..]버튼 선택 후 드라이버 jar 파일의 경로를 찾아 파일 등록하기
+		mysql
+		mysql-connector-java-8.0.17.jar
+	
+<<JDBC>>
+1. 드라이버 로딩
+	=> 드라이버안에 클래스들이 패키지에 저장되어 있으므로 모두 로딩하지 않고 핵심클래스만 메모리에 로딩
+	=> java.lang 패캐지의 Class라는 클래스의 forName이라는 메소드를 이용해서 드라이버 핵심클래스를 메모리에 로딩
+	=> 핵심클래스는 드라이버 클래스라 하며 이 드라이버 클래스는 어떤 DBMS를(버전에 따라서도 달라짐) 이용하냐에 따라 달라짐
+	[MySQL]
+	구버전
+	com.mysql.jdbc.Driver
+	
+	신버전
+	com.mysql.cj.jdbc.Driver
+	
+	[Oracle]
+	oracle.jdbc.driver.OracleDriver
+	
+	[문법]
+	Class.forName("JDBC 드라이버의 핵심클래스명")
+	Class.forName("com.mysql.cl.jdbc.Driver")
+	Class.forName("oracle.jdbc.driver.OracleDriver")
+	
+	
+2. DB서버에 연결하기
+	=> java.sql 패키지의 DriverManager클래스를 이용해서 DB서버에 연결
+	=> DriverManager의 getConnection 메소드를 이용해서 DB서버에 연결
+		public static Connection getConnection(	String url,
+        										String user,
+        										String password) throws SQLException
+		1)	static 메소드이므로 클래스 이름으로 엑세스해서 사용
+		2)	throws하고 있는 SQLException 클래스는 Exception의 하위이므로 try~catch를 이용해서 처리
+		3)	매개 변수 
+			url: DB서버에 연결하기 위한 연결 문자열(어떤 DBMS에 접속해야 하는지 정보를 담고 있는 문자열 - DMBS에 따라 다름)
+				[MySQL]
+				jdbc:mysql://ip:port/데이터베이스명
+				
+				[Oracle]
+				jdbc:oracle:thin:@ip:port:xe(서비스명)				
+							
+			user:
+			password:
+		4) 리턴타입
+			=> java.sql.Coneection리턴(인터페이스)
+			=> getConnection메소드가 정상 실행되면 DB서버에 접속이 되고 그 정보가 Connection객체로 만들어져서 리턴
+				어떤 DBMS를 사용하냐에 따라 하위 객체가 리턴
+				표준 API는 java.sql.Connection을 리턴한다고 명시되어 있지만
+				어떤 DBMS드라이버가 로딩되어 있냐에 따라 다른 Connection 객체가 리턴
+				리턴 객체의 다형성이 적용
+				MySQL의 드라이버가 로딩되어 있으면 mysql의 연결정보를 담고 있는 객체가 리턴되고
+				오라클 드라이버가 로딩되어 있으면 오라클의 연결정보를 담고있는 객체가 리턴
+	
+3. Statement 객체 생성
+	=> SQL 문을 실행할 수 있는 기능
+	=> Connection 객체의 메소드를 이용해서 생성
+	[상속 구조] 
+	|StateMent|								- 정적 SQL문을 실행할 때 사용 (보안취약)
+		ㄴ |PrePared Statement|				- 동적 SQL문을 실행할 때 사용(시큐어코딩에 적합한 방식, 캐시사용)
+				ㄴ	|CallableStatement| 	- 각 DBMS에 특화된 SQL문을 실행하기 위해 사용하는 객체
+	1) Statement 객체 이용
+		Connection 객체가 갖고 있는 createStatement 메소드를 이용해서 생성
+		[형식]
+		
+		Statement stmt = con.createStatement()
+		=> Statement객체는 어떤 드라이버가 로딩되어 있냐에 따라 다른 객체가 리턴
+	2) PreparedStatement 객체를 이용
+	
+4. SQL문 실행하기
+	1) Statement 사용
+		1. executeUpdate : insert,update,delete 명령문을 실행
+							매개 변수에 전달된 sql문을 실행
+							실행결과로 몇개의 row를 리턴
+5. 결과에 대한 처리
+6. 자원 반납
