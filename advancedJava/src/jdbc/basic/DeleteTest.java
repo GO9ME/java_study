@@ -5,14 +5,14 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class InsertTest {
+public class DeleteTest {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		String url = "jdbc:mysql://127.0.0.1:3306/jdbc?serverTimezone=UTC";
 		String user = "exam";
 		String password = "1234";
-		String sql = "insert into customer values('lee','1234','이민호','서울',sysdate(),1000,'신의짱')";
+		String sql = "DELETE FROM customer WHERE addr = '제천'";
 		
 		try {
 			// 1. 드라이버 로딩
