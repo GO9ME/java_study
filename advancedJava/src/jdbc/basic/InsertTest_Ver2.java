@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class InsertTest_Ver2 {
 	public static void main(String[] args) {
 		Scanner key = new Scanner(System.in);
-		
+
 		InsertTest_Ver2 obj = new InsertTest_Ver2();
 		System.out.print("아이디:");
 		String id = key.next();
@@ -24,17 +24,17 @@ public class InsertTest_Ver2 {
 		String memo = key.next();
 		obj.insert(id, pass, name, addr, memo);
 	}
-	
+
 	public void insert(String id, String pass, String name, String addr, String memo) {
-		
 		String url = "jdbc:mysql://127.0.0.1:3306/jdbc?serverTimezone=UTC";
 		String user = "exam";
 		String password = "1234";
+
 		String sql = "insert into customer values (?,?,?,?,sysdate(),1000,?)";
-		
+
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection(url,user,password);
+			Connection con = DriverManager.getConnection(url, user, password);
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, id);
 			pstmt.setString(2, pass);
@@ -43,7 +43,7 @@ public class InsertTest_Ver2 {
 			pstmt.setString(5, memo);
 //			Statement stmt = con.createStatement();
 			int result = pstmt.executeUpdate();
-			System.out.println(result+"개 행 삽입성공!");
+			System.out.println(result + "개 행 삽입성공!");
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			System.out.println("드라이버 로딩 실패!!");

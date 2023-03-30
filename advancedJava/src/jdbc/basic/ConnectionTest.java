@@ -7,10 +7,13 @@ public class ConnectionTest {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-//		String url = "jdbc:mysql://127.0.0.1:3306/jdbc?serverTimezone=UTC";
+//
 		String url = "jdbc:oracle:thin:@127.0.0.1:1521:xe";
+ 
+//		String url = "jdbc:mysql://127.0.0.1:3306/jdbc?serverTimezone=UTC";
 		String user = "exam";
 		String password = "1234";
+
 		
 		try {
 //			Class.forName("com.mysql.cj.jdbc.Driver");

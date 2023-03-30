@@ -25,9 +25,12 @@ public class UpdateTest_Ver2 {
 	}
 	
 	public void update(int point, String pass, String id) {
+
 		String url = "jdbc:mysql://127.0.0.1:3306/jdbc?serverTimezone=UTC";
 		String user = "exam";
 		String password = "1234";
+
+ 
 		
 		
 		String sql = "UPDATE customer SET point = ?, pass = ? WHERE id = ?";

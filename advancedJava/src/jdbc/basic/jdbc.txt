@@ -71,6 +71,33 @@ JVM이 인식할 수 있는 위치로 드라이버를 가져오기(Application�
 		Statement stmt = con.createStatement()
 		=> Statement객체는 어떤 드라이버가 로딩되어 있냐에 따라 다른 객체가 리턴
 	2) PreparedStatement 객체를 이용
+		Connection 객체에 정의된 preparedStatement 메소드를 이용해서 생성
+		캐시사용
+		[실행 흐름]
+		쿼리 문장 분석 -> 컴파일 -> 실행
+		
+		[사용방법]
+		PreparedStatement는 SQL문을 실행하는 과정에서 위의 실행흐름에 명시 되어 있는 과정을 매번 반복해서 처리하고 있지만
+		PreparedStatement객체는 한번만 작업
+		PreparedStatement객체는 한번 작업하고 캐시에서 꺼내서 사용
+		PreparedStatement객체가 sql문을 실행하는 방식이 미리 SQL문을 파싱해 놓고 외부에서 입력 받는 값들을 전달해서 최종 코드가 실행할 수 있도록
+		처리 
+		1. sql 문을 전달하며 PreparedStatement 객체를 생성
+			=>	Connection 객체의 PrepareStatement메소드를 호출할때 SQL문을 전달해야 함
+			PreparedStatement ptmt = con.preparedStatement(sql)
+		2. sql문을 작성할 때 외부에서 입력 받아서 처리할 부분을 ?로 대체하여 표시한 후 작업
+			=>	SQL문을 분석하고 외부에서 전달받아 완성할 부분을 내부에서 ? 로 인식
+			String sql = "insert into customer values(?,?,?,?,sysdate(),1000,?)
+			
+			?는 컬럼명에 줄 수 없고 값의 자리에만 사용할 수 있음
+		
+		3. ?에 대한 값을 설정
+			PreparedStatement의 setXXXX 메소드를 이용해서 설정
+			setXXX 메소드는 컬럼의 타입과 맞는 setter메소드를 선택해서 작업(ResultSet의 Getter메소드 타입 매칭과 동일)
+			ptmt.setString(1,id)
+			
+			ptmt.setInt(2,2000) => 2번째 물음에 2000 세팅
+		
 	
 4. SQL문 실행하기
 	1) Statement 사용
@@ -83,6 +110,10 @@ JVM이 인식할 수 있는 위치로 드라이버를 가져오기(Application�
 							DBMS에서 조회된 테이블을 자바에서 사용할 수 있도록 만들어서 제공되는 객체가 ResultSet
 							실제로는 어떤 DBMS가 사용되냐에 따라 다른 ResultSet객체가 리턴
 							리턴 될 대는 ResultSet의 하위객체가 리턴
+	2) PreparedStatement 사용
+		1. executeUpdate 2. executeQuery
+		=> Statement 객체와 메소드명은 동일하지만 PreparedStatement 객체의 메소드는 매개변수가 없는 메소드를 사용
+						PreparedStatement 객체를 만들때 이미 sql을 전달했으므로 다시 전달하지 않는다.
 		
 5. 결과에 대한 처리
 	1) insert, delete, update
@@ -113,3 +144,13 @@ JVM이 인식할 수 있는 위치로 드라이버를 가져오기(Application�
 		while(rs.next()) true/false를 리턴하므로 반복문 중 while문을 이용해서 작업
 		
 6. 자원 반납
+	클라이언트가 점유해서 사용하던 자원을 반납해야 함
+	Connection,Statement, ResultSet까지 모든 자원을 반납
+	close()메소드를 이용해서 처리
+	만들어진 순서가 아니라 제일 마지막에 생성된 객체부터 반납
+	
+7. DAO 패턴 ( Data Access Object ) 패턴
+	- 비즈니스 로직과 데이터 베이스 엑세스 하는 코드를 분리
+	- DBMS, 파일, JSON등 다양한 형식의 저장 장치로 데이터를 관리하더라도 기존에 잘 실행되는 코드는 변경하지 않도록 관리
+	- DAO 패턴을 적용하기 위해 상위 인터페이스를 작성
+	- 테이블 + DAO 의 형식으로 클래스를 작성

@@ -19,14 +19,17 @@ public class SelectTest_Ver2 {
 		obj.select(addr);
 	}
 	public void select(String addr) {
+
 		String url = "jdbc:mysql://127.0.0.1:3306/jdbc?serverTimezone=UTC";
 		String user = "exam";
 		String password = "1234";
+
+ 
 		String sql = "SELECT * FROM customer WHERE addr = ?";
 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection(url, user, password);
+			Connection con =DriverManager.getConnection(url, user, password);
 			PreparedStatement stmt = con.prepareStatement(sql);
 			stmt.setString(1, addr);
 

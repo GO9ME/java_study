@@ -9,9 +9,12 @@ public class UpdateTest {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+
 		String url = "jdbc:mysql://127.0.0.1:3306/jdbc?serverTimezone=UTC";
 		String user = "exam";
 		String password = "1234";
+
+ 
 		String sql = "UPDATE customer SET addr = '서울특별시' WHERE addr = '서울'";
 		
 		try {

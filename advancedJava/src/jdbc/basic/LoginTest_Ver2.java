@@ -2,28 +2,40 @@ package jdbc.basic;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Scanner;
 
-public class LoginTest {
+public class LoginTest_Ver2 {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		// TODO Auto-generated method stub
+		LoginTest_Ver2 obj = new LoginTest_Ver2();
+
+		Scanner key = new Scanner(System.in);
+		System.out.print("아이디:");
+		String id = key.next();
+		System.out.print("패스워드:");
+		String pass = key.next();
+
+		obj.login(id, pass);
+	}
+
+	public void login(String id, String pass) {
 		String url = "jdbc:mysql://127.0.0.1:3306/jdbc?serverTimezone=UTC";
 		String user = "exam";
 		String password = "1234";
 
- 
- 
-		String sql = "SELECT * FROM customer WHERE id = 'bts' and pass = '1234'";
+		String sql = "SELECT * FROM customer WHERE id = ? and pass = ?";
 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con = DriverManager.getConnection(url, user, password);
-			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery(sql);
+			PreparedStatement stmt = con.prepareStatement(sql);
+			stmt.setString(1, id);
+			stmt.setString(2, pass);
+			ResultSet rs = stmt.executeQuery();
 			if (rs.next()) {
 				do {
 					System.out.print(rs.getString(1) + "\t");
@@ -32,7 +44,7 @@ public class LoginTest {
 					System.out.print(rs.getString(4) + "\t");
 					System.out.print(rs.getString(5) + "\t");
 					System.out.print(rs.getString(6) + "\t");
-				} while (rs.next()); 
+				} while (rs.next());
 			} else {
 				System.out.println("로그인 실패");
 			}

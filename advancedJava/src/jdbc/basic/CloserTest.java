@@ -2,26 +2,46 @@ package jdbc.basic;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Scanner;
 
-public class SearchTest {
+public class CloserTest {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		CloserTest obj = new CloserTest();
+		Scanner key = new Scanner(System.in);
+
+		System.out.print("주소:");
+		String addr = key.next();
+		obj.select(addr);
+	}
+
+	public void select(String addr) {
+
+ 
+ 
+		String sql = "SELECT * FROM customer WHERE addr like ?";
+
+		Connection con = null;
+		ResultSet rs = null;
+		PreparedStatement stmt = null;
+		
 		String url = "jdbc:mysql://127.0.0.1:3306/jdbc?serverTimezone=UTC";
 		String user = "exam";
 		String password = "1234";
 
-		String sql = "SELECT empno,ename,job,mgr,hiredate,sal FROM emp";
-
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection(url, user, password);
-			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery(sql);
+			con = DriverManager.getConnection(url, user, password);
+			stmt = con.prepareStatement(sql);
+			stmt.setString(1, "%"+addr+"%");
+
+			rs = stmt.executeQuery();
+
 			while (rs.next()) {
-//						System.out.println(rs.getString("id"));
 				System.out.print(rs.getString(1) + "\t");
 				System.out.print(rs.getString(2) + "\t");
 				System.out.print(rs.getString(3) + "\t");
@@ -36,7 +56,18 @@ public class SearchTest {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+				if (con != null)
+					con.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
-
 }

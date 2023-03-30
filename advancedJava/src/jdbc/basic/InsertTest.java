@@ -12,6 +12,8 @@ public class InsertTest {
 		String url = "jdbc:mysql://127.0.0.1:3306/jdbc?serverTimezone=UTC";
 		String user = "exam";
 		String password = "1234";
+ 
+ 
 		String sql = "insert into customer values('lee','1234','이민호','서울',sysdate(),1000,'신의짱')";
 		
 		try {
