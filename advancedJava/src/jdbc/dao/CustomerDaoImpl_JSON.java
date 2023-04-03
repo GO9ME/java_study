@@ -1,11 +1,19 @@
 package jdbc.dao;
 
+import java.util.ArrayList;
+
 public class CustomerDaoImpl_JSON implements CustomerDAO{
 
 	@Override
-	public int insert(String id, String pass, String name, String addr, String memo) {
+	public int insert(CustomerVO customer) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+	
+	@Override
+	public ArrayList<CustomerVO> getMemberList() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
@@ -21,15 +29,22 @@ public class CustomerDaoImpl_JSON implements CustomerDAO{
 	}
 
 	@Override
-	public void select(String addr) {
+	public ArrayList<CustomerVO> select(String addr) {
+		return null;
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void login(String id, String pass) {
+	public CustomerVO login(String id, String pass) {
+		return null;
 		// TODO Auto-generated method stub
 		
+	}
+	@Override
+	public CustomerVO getCustomerInfo(String id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }
